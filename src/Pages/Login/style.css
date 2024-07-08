@@ -1,0 +1,202 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+  
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    font-family: 'Lato', sans-serif;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #A2A2A2;
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+    transition: 0.3s;
+}
+
+.main-container {
+    background-color: #F2F3F7;
+}
+
+.barra {
+    display: none;
+}
+
+
+/*MAIN*/
+
+.login-main {
+    width: 100vw; /* Largura de 100% da viewport */
+    height: 95vh; /* Altura de 100% da viewport */
+    background-image: url("../../Assets/CE_banner.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 80%;
+    height: 70%;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.login-img {
+    width: 150px;
+    height: 95px;
+    border-radius: 10px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    row-gap: 10px;
+}
+
+.login-form label {
+    font-size: 18px;
+    color: #fff;
+    display: flex;
+    align-items: flex-start;
+    width: 80%;
+}
+
+.login-form input {
+    width: 80%;
+    height: 35px;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding-left: 5px;
+    font-size: 14px;
+}
+
+.login-entrar {
+    width: 70%;
+    height: 35px;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba(20, 34, 223, 0.37);
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 5px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding-left: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    color: blue;
+}
+
+@media screen and (min-width: 1024px) {
+    .login-container {
+        width: 60%;
+    }
+
+    .login-img {
+        width: 200px;
+        height: 120px;
+    }
+
+    .login-form {
+        width: 90%;
+    }
+    
+    .login-form label {
+        font-size: 22px;
+    }
+    
+    .login-form input {
+        width: 80%;
+        height: 50px;
+        font-size: 16px;
+    }
+    
+    .login-entrar {
+        width: 60%;
+        height: 45px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 1300px) {
+    .login-container {
+        width: 40%;
+        height: 75%;
+    }
+
+    .login-form {
+        width: 80%;
+    }
+    
+    .login-form label {
+        font-size: 18px;
+        width: 70%;
+    }
+    
+    .login-form input {
+        width: 70%;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .login-entrar {
+        width: 40%;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 1880px) {
+
+    .login-container {
+        width: 30%;
+    }
+
+    .login-img {
+        width: 200px;
+        height: 120px;
+    }
+
+    .login-form {
+        width: 100%;
+        row-gap: 15px;
+    }
+    
+    .login-form label {
+        font-size: 22px;
+        width: 70%;
+    }
+    
+    .login-form input {
+        width: 70%;
+        height: 45px;
+        font-size: 16px;
+    }
+    
+    .login-entrar {
+        width: 40%;
+        height: 50px;
+        font-size: 22px;
+    }
+}

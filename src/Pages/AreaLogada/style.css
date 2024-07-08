@@ -1,0 +1,182 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+  
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    font-family: 'Lato', sans-serif;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #A2A2A2;
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+    transition: 0.3s;
+}
+
+.main-container {
+    background-color: #F2F3F7;
+}
+
+.logada-main {
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: 250px; /* Ajuste conforme necessário */
+    background-image: url("../../Assets//bg.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-inline: 40px;
+    padding-bottom: 80px;
+    row-gap: 20px;
+}
+
+.logada-main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 1, 107, 0.5); /* Cor azul com opacidade */
+    z-index: 1; /* Certifica-se que o overlay esteja acima da imagem */
+}
+
+.logada-welcome {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30%;
+    height: 80%;
+    width: 100%;
+    z-index: 1;
+    row-gap: 10px;
+}
+
+.logada-welcome h2 {
+    color: #fff;
+    font-size: 36px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.logada-welcome h4 {
+    color: #fff;
+    font-size: 22px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.logada-options {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10%;
+    row-gap: 30px;
+}
+
+.opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
+.opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+    width: 95%;
+    height: 300px;
+    border-radius: 0% 10% 10% 10%;
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 15px;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+.options-h2 {
+    font-size: 22px;
+}
+
+.options-p {
+    font-size: 14px;
+}
+
+.options-btn {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1250a1;
+}
+
+.options-span {
+    color: #fff;
+    background-color: #1250a1;
+    border-radius: 50px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 1024px) {
+    
+    .logada-welcome {
+        align-items: flex-start;
+        padding-top: 10%;
+    }
+    
+    .logada-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        row-gap: 40px;
+        column-gap: 40px;
+    }
+    
+    .opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
+    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+        width: 30%;
+    }
+
+}
+
+@media screen and (min-width: 1300px) {
+    
+    .logada-options {
+        padding: 5%;
+    }
+
+}
+
+@media screen and (min-width: 1880px) {
+
+    .logada-welcome {
+        align-items: flex-start;
+        padding-top: 10%;
+        padding-left: 8%;
+    }
+
+    .logada-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        row-gap: 60px;
+        column-gap: 20px;
+    }
+
+    .opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
+    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+        width: 25%;
+    }
+
+}
