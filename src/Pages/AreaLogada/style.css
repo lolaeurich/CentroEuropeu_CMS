@@ -99,6 +99,13 @@ html, body {
     flex-direction: column;
     justify-content: space-evenly;
     padding: 15px;
+    cursor: pointer;
+}
+
+.opt-cadastrar-prod:hover, .opt-cadastrar-serv:hover, .opt-cadastrar-aluno:hover,
+.opt-alterar-banner:hover, .opt-alterar-popup:hover, .opt-listar-parceiros:hover {
+    transform: scale(1.05); /* Ajuste o valor conforme desejado */
+    transition: transform 0.3s ease; /* Transição suave de 0.3 segundos */
 }
 
 .icon {
