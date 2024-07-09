@@ -17,6 +17,11 @@
     height: 45px;
 }
 
+.nav-logo:hover {
+    transform: scale(1.05); /* Ajuste o valor conforme desejado */
+    transition: transform 0.3s ease; /* Transição suave de 0.3 segundos */
+}
+
 .nav-btn {
     width: 80px;
     height: 30px;
