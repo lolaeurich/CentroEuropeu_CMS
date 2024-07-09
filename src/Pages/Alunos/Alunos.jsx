@@ -8,6 +8,7 @@ function Alunos() {
     const [cpf, setCpf] = useState("");
     const [curso, setCurso] = useState("");
     const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -36,52 +37,73 @@ function Alunos() {
             );
 
             console.log("Aluno cadastrado com sucesso:", response.data);
+            setMessage("Aluno cadastrado com sucesso!");
+
             // Limpar campos após o cadastro
             setNome("");
             setCpf("");
             setCurso("");
+
+            // Limpar mensagem após 5 segundos
+            setTimeout(() => {
+                setMessage("");
+            }, 5000); // 5000 milissegundos = 5 segundos
         } catch (error) {
             console.error("Erro ao cadastrar aluno:", error);
-            // Tratar erro (ex: exibir mensagem de erro para o usuário)
+            setMessage("Erro ao cadastrar aluno. Por favor, tente novamente.");
+
+            // Limpar mensagem de erro após 5 segundos
+            setTimeout(() => {
+                setMessage("");
+            }, 5000); // 5000 milissegundos = 5 segundos
         }
     };
 
     const handleSubmitFile = async (event) => {
         event.preventDefault();
-    
+
         try {
             const token = localStorage.getItem("token");
             if (!token) {
                 // Lidar com o caso em que não há token (usuário não autenticado)
                 return;
             }
-    
+
             const formData = new FormData();
-            formData.append("excel", event.target.files[0]);
-    
+            formData.append("excel", file);
+
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/student/import", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`,
                 },
             });
-    
+
             console.log("Resposta da importação de alunos:", response.data);
-    
-            // Exibir mensagem de sucesso ou redirecionar após importação bem-sucedida
+            setMessage("Importação realizada com sucesso!");
+
+            // Limpar campo de arquivo após a importação
+            setFile(null);
+
+            // Limpar mensagem após 5 segundos
+            setTimeout(() => {
+                setMessage("");
+            }, 5000); // 5000 milissegundos = 5 segundos
         } catch (error) {
             if (error.response) {
                 console.error("Erro ao importar alunos:", error.response.data.message);
-                // Exibir mensagem de erro para o usuário
-                alert(`Erro ao importar alunos: ${error.response.data.message}`);
+                setMessage(`Erro ao importar alunos: ${error.response.data.message}`);
             } else {
                 console.error("Erro ao importar alunos:", error.message);
-                // Exibir mensagem de erro genérica para o usuário
-                alert("Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde.");
+                setMessage("Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde.");
             }
+
+            // Limpar mensagem de erro após 5 segundos
+            setTimeout(() => {
+                setMessage("");
+            }, 5000); // 5000 milissegundos = 5 segundos
         }
     };
-    
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -125,7 +147,7 @@ function Alunos() {
 
                 <form className="form-alunos" onSubmit={handleSubmitFile}>
                     <h2 className="form-h2">Cadastrar alunos em massa:</h2>
-                    <label>Selecione arquivo (.xlsx)</label>
+                    <label>Selecione arquivo (.xlsx ou .csv)</label>
                     <input
                         className="file"
                         type="file"
@@ -137,6 +159,8 @@ function Alunos() {
                     />
                     <button type="submit">Adicionar alunos</button>
                 </form>
+
+                {message && <p className="message">{message}</p>}
             </div>
         </div>
     );

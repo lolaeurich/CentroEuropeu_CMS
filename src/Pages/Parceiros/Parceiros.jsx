@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
+import * as XLSX from 'xlsx'; // Importar a biblioteca XLSX
 
 function Parceiros() {
   const [parceiros, setParceiros] = useState([]);
@@ -30,6 +31,30 @@ function Parceiros() {
       // Lógica para redirecionar para a página de login ou tratar o erro de autenticação
     }
   }, []);
+
+  const handleDownloadExcel = () => {
+    const filename = "lista_parceiros.xlsx";
+
+    // Preparar dados para exportação
+    const dataExport = parceiros.map(parceiro => ({
+      Nome: parceiro.name,
+      Email: parceiro.email,
+      Telefone: parceiro.phone,
+      Endereço: parceiro.address,
+      Contato: parceiro.contact_name,
+      "Área de Ocupação": parceiro.occupation_area
+    }));
+
+    // Criar workbook e worksheet
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(dataExport);
+
+    // Adicionar worksheet ao workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Parceiros");
+
+    // Salvar arquivo
+    XLSX.writeFile(workbook, filename);
+  };
 
   return (
     <div>
@@ -66,6 +91,8 @@ function Parceiros() {
             )}
           </tbody>
         </table>
+
+        <button onClick={handleDownloadExcel}>Baixar Excel</button>
       </div>
     </div>
   );

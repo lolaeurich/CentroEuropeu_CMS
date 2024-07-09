@@ -53,7 +53,7 @@ html, body {
 }
 
 .form-alunos label {
-    padding-top: 15px;
+    padding-top: 12px;
     padding-bottom: 5px;
     color: #1250a1;
     font-weight: 600;
@@ -61,7 +61,7 @@ html, body {
 
 .form-alunos input {
     padding-left: 10px;
-    height: 40px;
+    height: 37px;
 }
 
 .form-produtos select {
@@ -90,6 +90,19 @@ html, body {
     cursor: pointer;
     color: #1250a1;
     font-weight: 600;
+}
+
+.message {
+    position: absolute;
+    width: 100%;
+    max-width: 600px;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 @media screen and (min-width: 700px) {
@@ -135,6 +148,8 @@ html, body {
     }
     .form-alunos {
         height: 500px;
+        width: 47%;
+        padding: 5% 5% 5% 5%;
     }
    .form-alunos button {
         height: 50px;

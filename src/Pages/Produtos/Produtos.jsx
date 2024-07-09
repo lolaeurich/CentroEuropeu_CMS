@@ -11,19 +11,19 @@ function Produtos() {
         payment_condition: "",
         hotmart_url: "",
         category: "",
-        sub_category: "",
+        sub_category: null,
         photo: null,
     });
 
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const [productInfo, setProductInfo] = useState(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) {
-                    // Tratar caso de usuário não autenticado
                     return;
                 }
 
@@ -35,10 +35,6 @@ function Produtos() {
 
                 if (response.data && response.data.categories) {
                     setCategories(response.data.categories);
-                    // Definir subcategorias da primeira categoria, se existir
-                    if (response.data.categories.length > 0) {
-                        setSubCategories(response.data.categories[0].subcategories || []);
-                    }
                 } else {
                     console.error("Resposta da API de categorias inválida:", response);
                 }
@@ -50,28 +46,49 @@ function Produtos() {
         fetchCategories();
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        if (name === "foto") {
+    const handleChange = async (e) => {
+        const { name, value } = e.target;
+
+        if (name === "category") {
             setFormData({
                 ...formData,
-                photo: files[0], // Armazenar o arquivo de imagem selecionado
+                category: value,
+                sub_category: null, // Reset sub_category when category changes
             });
+
+            // Fetch subcategories based on selected category
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    return;
+                }
+
+                const categoryId = categories.find(cat => cat.name === value)?.id;
+
+                if (categoryId) {
+                    const subCategoryResponse = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/category?parent_id[]=${categoryId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (subCategoryResponse.data && subCategoryResponse.data.categories && subCategoryResponse.data.categories.length > 0) {
+                        setSubCategories(subCategoryResponse.data.categories[0].children || []);
+                    } else {
+                        setSubCategories([]);
+                    }
+                } else {
+                    setSubCategories([]);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar subcategorias:", error);
+                setSubCategories([]);
+            }
         } else {
             setFormData({
                 ...formData,
                 [name]: value,
             });
-
-            if (name === "category") {
-                // Atualizar as subcategorias quando a categoria mudar
-                const selectedCategory = categories.find(cat => cat.name === value);
-                if (selectedCategory) {
-                    setSubCategories(selectedCategory.subcategories || []);
-                } else {
-                    setSubCategories([]);
-                }
-            }
         }
     };
 
@@ -81,7 +98,6 @@ function Produtos() {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                // Tratar caso de usuário não autenticado
                 return;
             }
 
@@ -92,10 +108,11 @@ function Produtos() {
             payload.append("payment_condition", formData.payment_condition);
             payload.append("hotmart_url", formData.hotmart_url);
             payload.append("category", formData.category);
-            if (formData.sub_category) {
+            payload.append("photo", formData.photo);
+
+            if (formData.sub_category !== null) {
                 payload.append("sub_category", formData.sub_category);
             }
-            payload.append("photo", formData.photo); // Adicionar a imagem ao FormData
 
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/product", payload, {
                 headers: {
@@ -106,7 +123,8 @@ function Produtos() {
 
             console.log("Resposta da API:", response.data);
 
-            // Limpar o formulário ou exibir mensagem de sucesso
+            setProductInfo(response.data.product);
+
             setFormData({
                 name: "",
                 price: "",
@@ -114,7 +132,7 @@ function Produtos() {
                 payment_condition: "",
                 hotmart_url: "",
                 category: "",
-                sub_category: "",
+                sub_category: null,
                 photo: null,
             });
 
@@ -122,7 +140,6 @@ function Produtos() {
         } catch (error) {
             console.error("Erro ao cadastrar produto:", error);
 
-            // Exibir mensagem de erro para o usuário
             if (error.response) {
                 alert(`Erro ao cadastrar produto: ${error.response.data.message}`);
             } else {
@@ -147,7 +164,7 @@ function Produtos() {
                         ))}
                     </select>
                     <label>Subcategoria</label>
-                    <select name="sub_category" id="produtos-sub" value={formData.sub_category} onChange={handleChange}>
+                    <select name="sub_category" id="produtos-sub" value={formData.sub_category || ""} onChange={handleChange}>
                         <option value="">Selecione...</option>
                         {subCategories && subCategories.map((subcat) => (
                             <option key={subcat.id} value={subcat.name}>
@@ -170,6 +187,36 @@ function Produtos() {
                 
                     <button type="submit">Adicionar produto</button>
                 </form>
+
+                {productInfo && (
+                    <div className="product-info">
+                        <h3>Detalhes do produto cadastrado:</h3>
+                        <p>Nome: {productInfo.name}</p>
+                        <p>Preço: {productInfo.price}</p>
+                        <p>Descrição: {productInfo.description}</p>
+                        <p>Condição de pagamento: {productInfo.payment_condition}</p>
+                        <p>Link do produto: <a href={productInfo.hotmart_url}>{productInfo.hotmart_url}</a></p>
+                        <p>Categoria: {productInfo.category}</p>
+                        {productInfo.sub_category && <p>Subcategoria: {productInfo.sub_category}</p>}
+
+                        <div className="product-photos">
+                            <h4>Fotos do produto:</h4>
+                            {productInfo.photos.map((photo) => (
+                                <img key={photo.id} src={photo.public_path} alt={photo.name} />
+                            ))}
+                        </div>
+
+                        <div className="product-videos">
+                            <h4>Vídeos do produto:</h4>
+                            {productInfo.videos.map((video) => (
+                                <video key={video.id} controls>
+                                    <source src={video.public_path} type={video.mime_type} />
+                                    Seu navegador não suporta vídeos HTML5.
+                                </video>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
