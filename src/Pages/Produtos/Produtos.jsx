@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 import axios from "axios";
+import * as XLSX from "xlsx"; // Importar a biblioteca para manipulação de Excel
 
 function Produtos() {
     const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ function Produtos() {
 
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
-    const [productInfo, setProductInfo] = useState(null);
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -46,50 +47,39 @@ function Produtos() {
         fetchCategories();
     }, []);
 
-    const handleChange = async (e) => {
-        const { name, value } = e.target;
-
-        if (name === "category") {
-            setFormData({
-                ...formData,
-                category: value,
-                sub_category: null, // Reset sub_category when category changes
-            });
-
-            // Fetch subcategories based on selected category
+    useEffect(() => {
+        const fetchProducts = async () => {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) {
                     return;
                 }
 
-                const categoryId = categories.find(cat => cat.name === value)?.id;
+                const response = await axios.get("https://centroeuropeuhomolog.belogic.com.br/api/product", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-                if (categoryId) {
-                    const subCategoryResponse = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/category?parent_id[]=${categoryId}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-
-                    if (subCategoryResponse.data && subCategoryResponse.data.categories && subCategoryResponse.data.categories.length > 0) {
-                        setSubCategories(subCategoryResponse.data.categories[0].children || []);
-                    } else {
-                        setSubCategories([]);
-                    }
+                if (response.data && response.data.products && response.data.products.data) {
+                    setProducts(response.data.products.data);
                 } else {
-                    setSubCategories([]);
+                    console.error("Resposta da API de produtos inválida:", response);
                 }
             } catch (error) {
-                console.error("Erro ao buscar subcategorias:", error);
-                setSubCategories([]);
+                console.error("Erro ao buscar produtos:", error);
             }
-        } else {
-            setFormData({
-                ...formData,
-                [name]: value,
-            });
-        }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
 
     const handleSubmit = async (e) => {
@@ -123,8 +113,6 @@ function Produtos() {
 
             console.log("Resposta da API:", response.data);
 
-            setProductInfo(response.data.product);
-
             setFormData({
                 name: "",
                 price: "",
@@ -148,10 +136,59 @@ function Produtos() {
         }
     };
 
+    const handleDownloadExcel = () => {
+        const header = ["Nome", "Preço", "Descrição", "Condição de pagamento", "Link do produto", "Categoria", "Subcategoria"];
+        const data = products.map(product => [
+            product.name,
+            product.price,
+            product.description,
+            product.payment_condition,
+            product.hotmart_url,
+            product.category,
+            product.sub_category || "",
+        ]);
+
+        const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Produtos");
+
+        XLSX.writeFile(wb, "produtos.xlsx");
+    };
+
     return (
         <div>
             <Nav />
             <div className="produtos-main">
+            <h1>Lista de Produtos</h1>
+                <table className="tabela-produtos">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Descrição</th>
+                            <th>Condição de pagamento</th>
+                            <th>Link do produto</th>
+                            <th>Categoria</th>
+                            <th>Subcategoria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {products.map(product => (
+                            <tr key={product.id}>
+                                <td>{product.name}</td>
+                                <td>{product.price}</td>
+                                <td>{product.description}</td>
+                                <td>{product.payment_condition}</td>
+                                <td><a href={product.hotmart_url}>{product.hotmart_url}</a></td>
+                                <td>{product.category}</td>
+                                <td>{product.sub_category || "-"}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <button onClick={handleDownloadExcel}>Baixar Excel</button>
+
                 <form className="form-produtos" onSubmit={handleSubmit}>
                     <h2 className="form-h2">Adicione um novo produto:</h2>
                     <label>Categoria</label>
@@ -187,36 +224,6 @@ function Produtos() {
                 
                     <button type="submit">Adicionar produto</button>
                 </form>
-
-                {productInfo && (
-                    <div className="product-info">
-                        <h3>Detalhes do produto cadastrado:</h3>
-                        <p>Nome: {productInfo.name}</p>
-                        <p>Preço: {productInfo.price}</p>
-                        <p>Descrição: {productInfo.description}</p>
-                        <p>Condição de pagamento: {productInfo.payment_condition}</p>
-                        <p>Link do produto: <a href={productInfo.hotmart_url}>{productInfo.hotmart_url}</a></p>
-                        <p>Categoria: {productInfo.category}</p>
-                        {productInfo.sub_category && <p>Subcategoria: {productInfo.sub_category}</p>}
-
-                        <div className="product-photos">
-                            <h4>Fotos do produto:</h4>
-                            {productInfo.photos.map((photo) => (
-                                <img key={photo.id} src={photo.public_path} alt={photo.name} />
-                            ))}
-                        </div>
-
-                        <div className="product-videos">
-                            <h4>Vídeos do produto:</h4>
-                            {productInfo.videos.map((video) => (
-                                <video key={video.id} controls>
-                                    <source src={video.public_path} type={video.mime_type} />
-                                    Seu navegador não suporta vídeos HTML5.
-                                </video>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

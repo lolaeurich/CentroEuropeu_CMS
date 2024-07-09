@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -15,6 +15,7 @@ html, body {
     background: #A2A2A2;
     border-radius: 20px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #fff;
     transition: 0.3s;
@@ -24,28 +25,63 @@ html, body {
     background-color: #F2F3F7;
 }
 
-
 .alunos-main {
     width: 100%;
-    height: 850px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
-    padding: 30% 10% 10% 10%;
+    padding: 10% 10% 5% 10%;
     row-gap: 30px;
 }
 
-.form-alunos {
-    width: 95%;
-    height: 700px;
-    border-radius: 0% 10% 10% 10%;
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+.tabela-alunos {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow-x: auto;
+    overflow-y: auto; /* Adicionando scroll vertical */
+    max-height: 400px; /* Altura máxima antes de exibir scroll */
+}
 
+.tabela-alunos th,
+.tabela-alunos td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-alunos th {
+    background-color: #072955;
+    color: white;
+}
+
+.tabela-alunos td {
+    background-color: #f2f2f2;
+}
+
+.forms {
+    display: flex;
+    flex-wrap: wrap; /* Garante que os formulários quebrem para a próxima linha */
+    justify-content: center; /* Centraliza os formulários */
+    gap: 30px; /* Espaçamento entre os formulários */
+}
+
+.form-alunos {
+    width: 100%;
+    max-width: 400px; /* Largura máxima dos formulários */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10%;
+    justify-content: center;
 }
 
 .form-h2 {
@@ -62,16 +98,6 @@ html, body {
 .form-alunos input {
     padding-left: 10px;
     height: 37px;
-}
-
-.form-produtos select {
-    padding-left: 10px;
-    height: 40px;
-}
-
-.file {
-    height: 40px;
-    padding-left: 0px !important;
 }
 
 .form-alunos button {
@@ -107,14 +133,15 @@ html, body {
 
 @media screen and (min-width: 700px) {
     .alunos-main {
-        width: 100%;
-        height: 750px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
         padding: 10% 10% 10% 10%;
-        row-gap: 30px;
+    }
+    
+    .tabela-alunos {
+        margin-bottom: 0;
+    }
+
+    .forms {
+        justify-content: flex-start; /* Ajustado para alinhar à esquerda */
     }
     
     .form-alunos {
@@ -122,48 +149,26 @@ html, body {
         height: 400px;
         border-radius: 0% 10% 10% 10%;
         box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
         padding: 7%;
     }
-    
-}
-
-@media screen and (min-width: 700px) {
-    .form-alunos {
-        height: 450px;
-    }
-   .form-alunos button {
-        height: 50px;
-   }
-    
 }
 
 @media screen and (min-width: 1300px) {
     .alunos-main {
         padding: 10% 10% 5% 10%;
-        row-gap: 30px;
     }
     .form-alunos {
-        height: 500px;
         width: 47%;
-        padding: 5% 5% 5% 5%;
+        padding: 5%;
     }
-   .form-alunos button {
-        height: 50px;
-   }
-    
 }
 
 @media screen and (min-width: 1880px) {
-    .form-alunos {
-        height: 500px;
-        padding: 5%;
+    .alunos-main {
+        padding: 5% 10% 5% 10%;
     }
-   .form-alunos button {
-        height: 50px;
-   }
-    
+    .form-alunos {
+        padding: 5%;
+        height: 590px;
+    }
 }

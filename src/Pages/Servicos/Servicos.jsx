@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 import axios from "axios";
+import * as XLSX from "xlsx"; // Importar a biblioteca para manipulação de Excel
 
 function Servicos() {
     const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ function Servicos() {
 
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const [services, setServices] = useState([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -43,6 +45,33 @@ function Servicos() {
         };
 
         fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    return;
+                }
+
+                const response = await axios.get("https://centroeuropeuhomolog.belogic.com.br/api/service", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data && response.data.services && response.data.services.data) {
+                    setServices(response.data.services.data);
+                } else {
+                    console.error("Resposta da API de serviços inválida:", response);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar serviços:", error);
+            }
+        };
+
+        fetchServices();
     }, []);
 
     const handleChange = async (e) => {
@@ -113,7 +142,7 @@ function Servicos() {
                 payload.append("sub_category", formData.sub_category);
             }
 
-            const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/product", payload, {
+            const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/service", payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
@@ -145,10 +174,58 @@ function Servicos() {
         }
     };
 
+    const handleDownloadExcel = () => {
+        const header = ["Nome", "Preço", "Descrição", "Condição de pagamento", "Link do serviço", "Categoria", "Subcategoria"];
+        const data = services.map(service => [
+            service.name,
+            service.price,
+            service.description,
+            service.payment_condition,
+            service.hotmart_url,
+            service.category,
+            service.sub_category || "",
+        ]);
+
+        const ws = XLSX.utils.aoa_to_sheet([header, ...data]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Serviços");
+
+        XLSX.writeFile(wb, "servicos.xlsx");
+    };
+
     return (
         <div>
             <Nav />
             <div className="produtos-main">
+                <table className="tabela-produtos">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Descrição</th>
+                            <th>Condição de pagamento</th>
+                            <th>Link do serviço</th>
+                            <th>Categoria</th>
+                            <th>Subcategoria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {services.map(service => (
+                            <tr key={service.id}>
+                                <td>{service.name}</td>
+                                <td>{service.price}</td>
+                                <td>{service.description}</td>
+                                <td>{service.payment_condition}</td>
+                                <td><a href={service.hotmart_url}>{service.hotmart_url}</a></td>
+                                <td>{service.category}</td>
+                                <td>{service.sub_category || "-"}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <button onClick={handleDownloadExcel}>Baixar Excel</button>
+
                 <form className="form-produtos" onSubmit={handleSubmit}>
                     <h2 className="form-h2">Adicione um novo serviço:</h2>
                     <label>Categoria</label>

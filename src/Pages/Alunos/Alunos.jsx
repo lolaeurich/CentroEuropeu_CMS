@@ -1,169 +1,261 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import * as XLSX from "xlsx"; // Importando a biblioteca XLSX
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
-import axios from "axios";
 
 function Alunos() {
-    const [nome, setNome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [curso, setCurso] = useState("");
-    const [file, setFile] = useState(null);
-    const [message, setMessage] = useState("");
+  const [alunos, setAlunos] = useState([]);
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [curso, setCurso] = useState("");
+  const [file, setFile] = useState(null);
+  const [message, setMessage] = useState("");
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token de autenticação não encontrado.");
+      // Lógica para tratar o erro de autenticação aqui
+      return;
+    }
 
-        try {
-            const token = localStorage.getItem("token");
+    const fetchAlunos = async () => {
+      try {
+        const response = await axios.get(
+          "https://centroeuropeuhomolog.belogic.com.br/api/student",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-            if (!token) {
-                console.error("Token de autenticação não encontrado.");
-                // Tratar o erro, redirecionar para a página de login, etc.
-                return;
-            }
+        console.log("Resposta da API de alunos:", response.data);
+        setAlunos(response.data.students.data);
+      } catch (error) {
+        console.error("Erro ao buscar alunos:", error.message);
+        // Lógica para tratar o erro de requisição aqui
+      }
+    };
 
-            const response = await axios.post(
-                "https://centroeuropeuhomolog.belogic.com.br/api/student",
-                {
-                    name: nome,
-                    cpf: cpf,
-                    course: curso
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+    fetchAlunos();
+  }, []);
 
-            console.log("Aluno cadastrado com sucesso:", response.data);
-            setMessage("Aluno cadastrado com sucesso!");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-            // Limpar campos após o cadastro
-            setNome("");
-            setCpf("");
-            setCurso("");
+    try {
+      const token = localStorage.getItem("token");
 
-            // Limpar mensagem após 5 segundos
-            setTimeout(() => {
-                setMessage("");
-            }, 5000); // 5000 milissegundos = 5 segundos
-        } catch (error) {
-            console.error("Erro ao cadastrar aluno:", error);
-            setMessage("Erro ao cadastrar aluno. Por favor, tente novamente.");
+      if (!token) {
+        console.error("Token de autenticação não encontrado.");
+        // Tratar o erro, redirecionar para a página de login, etc.
+        return;
+      }
 
-            // Limpar mensagem de erro após 5 segundos
-            setTimeout(() => {
-                setMessage("");
-            }, 5000); // 5000 milissegundos = 5 segundos
+      const response = await axios.post(
+        "https://centroeuropeuhomolog.belogic.com.br/api/student",
+        {
+          name: nome,
+          cpf: cpf,
+          course: curso,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
 
-    const handleSubmitFile = async (event) => {
-        event.preventDefault();
+      console.log("Aluno cadastrado com sucesso:", response.data);
+      setMessage("Aluno cadastrado com sucesso!");
 
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                // Lidar com o caso em que não há token (usuário não autenticado)
-                return;
-            }
+      // Limpar campos após o cadastro
+      setNome("");
+      setCpf("");
+      setCurso("");
 
-            const formData = new FormData();
-            formData.append("excel", file);
+      // Limpar mensagem após 5 segundos
+      setTimeout(() => {
+        setMessage("");
+      }, 5000); // 5000 milissegundos = 5 segundos
+    } catch (error) {
+      console.error("Erro ao cadastrar aluno:", error);
+      setMessage(
+        "Erro ao cadastrar aluno. Por favor, tente novamente."
+      );
 
-            const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/student/import", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+      // Limpar mensagem de erro após 5 segundos
+      setTimeout(() => {
+        setMessage("");
+      }, 5000); // 5000 milissegundos = 5 segundos
+    }
+  };
 
-            console.log("Resposta da importação de alunos:", response.data);
-            setMessage("Importação realizada com sucesso!");
+  const handleSubmitFile = async (event) => {
+    event.preventDefault();
 
-            // Limpar campo de arquivo após a importação
-            setFile(null);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        // Lidar com o caso em que não há token (usuário não autenticado)
+        return;
+      }
 
-            // Limpar mensagem após 5 segundos
-            setTimeout(() => {
-                setMessage("");
-            }, 5000); // 5000 milissegundos = 5 segundos
-        } catch (error) {
-            if (error.response) {
-                console.error("Erro ao importar alunos:", error.response.data.message);
-                setMessage(`Erro ao importar alunos: ${error.response.data.message}`);
-            } else {
-                console.error("Erro ao importar alunos:", error.message);
-                setMessage("Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde.");
-            }
+      const formData = new FormData();
+      formData.append("excel", file);
 
-            // Limpar mensagem de erro após 5 segundos
-            setTimeout(() => {
-                setMessage("");
-            }, 5000); // 5000 milissegundos = 5 segundos
+      const response = await axios.post(
+        "https://centroeuropeuhomolog.belogic.com.br/api/student/import",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         }
-    };
+      );
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
-    };
+      console.log("Resposta da importação de alunos:", response.data);
+      setMessage("Importação realizada com sucesso!");
 
-    return (
-        <div>
-            <Nav />
-            <div className="alunos-main">
-                <form className="form-alunos" onSubmit={handleSubmit}>
-                    <h2 className="form-h2">Cadastrar alunos individualmente:</h2>
-                    <label>Nome</label>
-                    <input
-                        name="nome"
-                        id="nome"
-                        type="text"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        required
-                    />
-                    <label>CPF</label>
-                    <input
-                        name="cpf"
-                        id="cpf"
-                        type="text"
-                        value={cpf}
-                        onChange={(e) => setCpf(e.target.value)}
-                        required
-                    />
-                    <label>Curso</label>
-                    <input
-                        name="curso"
-                        id="curso"
-                        type="text"
-                        value={curso}
-                        onChange={(e) => setCurso(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Adicionar aluno</button>
-                </form>
+      // Limpar campo de arquivo após a importação
+      setFile(null);
 
-                <form className="form-alunos" onSubmit={handleSubmitFile}>
-                    <h2 className="form-h2">Cadastrar alunos em massa:</h2>
-                    <label>Selecione arquivo (.xlsx ou .csv)</label>
-                    <input
-                        className="file"
-                        type="file"
-                        id="foto"
-                        name="foto"
-                        accept=".xlsx, .csv"
-                        onChange={handleFileChange}
-                        required
-                    />
-                    <button type="submit">Adicionar alunos</button>
-                </form>
+      // Limpar mensagem após 5 segundos
+      setTimeout(() => {
+        setMessage("");
+      }, 5000); // 5000 milissegundos = 5 segundos
+    } catch (error) {
+      if (error.response) {
+        console.error("Erro ao importar alunos:", error.response.data.message);
+        setMessage(`Erro ao importar alunos: ${error.response.data.message}`);
+      } else {
+        console.error("Erro ao importar alunos:", error.message);
+        setMessage(
+          "Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde."
+        );
+      }
 
-                {message && <p className="message">{message}</p>}
-            </div>
+      // Limpar mensagem de erro após 5 segundos
+      setTimeout(() => {
+        setMessage("");
+      }, 5000); // 5000 milissegundos = 5 segundos
+    }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleExportToExcel = () => {
+    const fileName = "lista_de_alunos.xlsx";
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const csvData = alunos.map(({ name, cpf, course }) => ({
+      Nome: name,
+      CPF: cpf,
+      Curso: course || "-",
+    }));
+    const ws = XLSX.utils.json_to_sheet(csvData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    const url = URL.createObjectURL(data);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+  };
+
+  return (
+    <div>
+      <Nav />
+      <div className="alunos-main">
+        <h1>Lista de Alunos</h1>
+        <table className="tabela-alunos">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Curso</th>
+            </tr>
+          </thead>
+          <tbody>
+            {alunos.length > 0 ? (
+              alunos.map((aluno) => (
+                <tr key={aluno.id}>
+                  <td>{aluno.name}</td>
+                  <td>{aluno.cpf}</td>
+                  <td>{aluno.course || "-"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3">Nenhum aluno encontrado.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+        <div className="export-button-container">
+          <button onClick={handleExportToExcel}>Exportar para Excel</button>
         </div>
-    );
+
+        <div className="forms">
+          <form className="form-alunos" onSubmit={handleSubmit}>
+            <h2 className="form-h2">Cadastrar alunos individualmente:</h2>
+            <label>Nome</label>
+            <input
+              name="nome"
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+            <label>CPF</label>
+            <input
+              name="cpf"
+              id="cpf"
+              type="text"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              required
+            />
+            <label>Curso</label>
+            <input
+              name="curso"
+              id="curso"
+              type="text"
+              value={curso}
+              onChange={(e) => setCurso(e.target.value)}
+              required
+            />
+            <button type="submit">Adicionar aluno</button>
+          </form>
+
+          <form className="form-alunos" onSubmit={handleSubmitFile}>
+            <h2 className="form-h2">Cadastrar alunos em massa:</h2>
+            <label>Selecione arquivo (.xlsx ou .csv)</label>
+            <input
+              className="file"
+              type="file"
+              id="foto"
+              name="foto"
+              accept=".xlsx, .csv"
+              onChange={handleFileChange}
+              required
+            />
+            <button type="submit">Adicionar alunos</button>
+          </form>
+
+          {message && <p className="message">{message}</p>}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Alunos;
