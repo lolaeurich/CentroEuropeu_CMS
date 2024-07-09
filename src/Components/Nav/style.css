@@ -15,6 +15,7 @@
 .nav-logo {
     width: 70px;
     height: 45px;
+    cursor: pointer;
 }
 
 .nav-logo:hover {
