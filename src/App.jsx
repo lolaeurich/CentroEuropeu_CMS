@@ -8,6 +8,10 @@ import Alunos from './Pages/Alunos/Alunos';
 import Banner from './Pages/Banner/Banner';
 import PopUp from './Pages/PopUp/PopUp';
 import Parceiros from './Pages/Parceiros/Parceiros';
+import Categorias from './Pages/Categorias/Categorias';
+import AddCategoria from './Pages/AddCategoria/AddCategoria';
+import AddSubCategoria from './Pages/AddSubcategoria/AddSubcategoria';
+import Termos from './Pages/Termos/Termos';
 
 const App = () => {
   return (
@@ -20,6 +24,10 @@ const App = () => {
      <Route path="/Banner" element={<Banner />}/>
      <Route path="/PopUp" element={<PopUp />}/>
      <Route path="/Parceiros" element={<Parceiros />}/>
+     <Route path="/Categorias" element={<Categorias />}/>
+     <Route path="/AddCategoria" element={<AddCategoria />}/>
+     <Route path="/AddSubCategoria" element={<AddSubCategoria />}/>
+     <Route path="/Termos" element={<Termos />}/>
     </Routes>
   );
 }

@@ -284,8 +284,8 @@ html, body {
     }
 
     .form-produtos label {
-        padding-top: 7px;
-        padding-bottom: 20px;
+        padding-top: 6px;
+        padding-bottom: 18px;
         font-size: 18px;
     }
 
@@ -297,12 +297,12 @@ html, body {
 
     .form-produtos input {
         padding-left: 10px;
-        height: 42px;
+        height: 40px;
     }
     
     .form-produtos select {
         padding-left: 10px;
-        height: 45px;
+        height: 40px;
     }
     
     .form-produtos textarea {

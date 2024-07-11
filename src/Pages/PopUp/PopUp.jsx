@@ -15,6 +15,11 @@ function PopUp() {
         // Recuperar o token do localStorage
         const token = localStorage.getItem("token");
 
+        // Verifica os valores antes do envio
+        console.log("Name:", name);
+        console.log("Discount:", discount);
+        console.log("Description:", description);
+
         try {
             const response = await axios.post(
                 "https://centroeuropeuhomolog.belogic.com.br/api/coupom",
@@ -30,12 +35,19 @@ function PopUp() {
                 }
             );
 
-            const { coupom } = response.data;
-            setMessage(`Cupom ${coupom.name} cadastrado com sucesso!`);
-            // Limpar os campos após o cadastro
-            setName("");
-            setDiscount("");
-            setDescription("");
+            console.log("Response:", response);
+
+            if (response.status === 200 && response.data && response.data.coupom) {
+                const { coupom } = response.data;
+                setMessage(`Cupom ${coupom.name} cadastrado com sucesso!`);
+                // Limpar os campos após o cadastro
+                setName("");
+                setDiscount("");
+                setDescription("");
+            } else {
+                console.error("Resposta inválida do servidor:", response);
+                setMessage("Erro ao cadastrar cupom. Resposta inválida do servidor.");
+            }
         } catch (error) {
             console.error("Erro ao cadastrar cupom:", error);
             setMessage("Erro ao cadastrar cupom. Por favor, tente novamente.");
@@ -56,7 +68,7 @@ function PopUp() {
                         onChange={(e) => setName(e.target.value)}
                         required
                     />
-                    <label>Desconto:</label>
+                    <label>Desconto <span style={{color: "gray"}}>(não é necessário inserir "%")</span>:</label>
                     <input
                         className="desconto"
                         type="text"

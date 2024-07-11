@@ -7,6 +7,8 @@ import aluno from "../../Assets/aluno.png";
 import banner from "../../Assets/banner.png";
 import popup from "../../Assets/popup.png";
 import parceiros from "../../Assets/parceiro.png";
+import categorias from "../../Assets/category.png";
+import termos from "../../Assets/termos.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -65,6 +67,14 @@ function AreaLogada() {
         navigate("/Parceiros");
     };
 
+    const handleCategorias = () => {
+        navigate("/Categorias");
+    };
+
+    const handleTermos = () => {
+        navigate("/Termos");
+    };
+
     return (
         <div>
             <Nav />
@@ -88,6 +98,13 @@ function AreaLogada() {
                     <hr />
                     <p className="options-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia, quam eu accumsan faucibus, nisl elit finibus erat, ut dignissim metus lectus vel est. </p>
                     <p className="options-btn">Acesse <span className="options-span" onClick={handleServ}>‎ {`>`} ‎</span></p>
+                </div>
+                <div className="opt-cadastrar-categorias">
+                    <img className="icon" alt="" src={categorias} />
+                    <h2 className="options-h2">Cadastrar Categorias e Subcategorias</h2>
+                    <hr />
+                    <p className="options-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia, quam eu accumsan faucibus, nisl elit finibus erat, ut dignissim metus lectus vel est. </p>
+                    <p className="options-btn">Acesse <span className="options-span" onClick={handleCategorias}>‎ {`>`} ‎</span></p>
                 </div>
                 <div className="opt-cadastrar-aluno">
                     <img className="icon" alt="" src={aluno} />
@@ -116,6 +133,13 @@ function AreaLogada() {
                     <hr />
                     <p className="options-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia, quam eu accumsan faucibus, nisl elit finibus erat, ut dignissim metus lectus vel est. </p>
                     <p className="options-btn">Acesse <span className="options-span" onClick={handleParceiros}>‎ {`>`} ‎</span></p>
+                </div>
+                <div className="opt-listar-parceiros">
+                    <img className="icon" alt="" src={termos} />
+                    <h2 className="options-h2">Atualizar termos</h2>
+                    <hr />
+                    <p className="options-p">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lacinia, quam eu accumsan faucibus, nisl elit finibus erat, ut dignissim metus lectus vel est. </p>
+                    <p className="options-btn">Acesse <span className="options-span" onClick={handleTermos}>‎ {`>`} ‎</span></p>
                 </div>
             </div>
         </div>

@@ -89,7 +89,8 @@ html, body {
 }
 
 .opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
-.opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+.opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros,
+.opt-cadastrar-categorias {
     width: 95%;
     height: 300px;
     border-radius: 0% 10% 10% 10%;
@@ -103,7 +104,8 @@ html, body {
 }
 
 .opt-cadastrar-prod:hover, .opt-cadastrar-serv:hover, .opt-cadastrar-aluno:hover,
-.opt-alterar-banner:hover, .opt-alterar-popup:hover, .opt-listar-parceiros:hover {
+.opt-alterar-banner:hover, .opt-alterar-popup:hover, .opt-listar-parceiros:hover,
+.opt-cadastrar-categorias:hover {
     transform: scale(1.05); /* Ajuste o valor conforme desejado */
     transition: transform 0.3s ease; /* Transição suave de 0.3 segundos */
 }
@@ -152,7 +154,8 @@ html, body {
     }
     
     .opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
-    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros,
+    .opt-cadastrar-categorias {
         width: 30%;
     }
 
@@ -182,7 +185,7 @@ html, body {
     }
 
     .opt-cadastrar-prod, .opt-cadastrar-serv, .opt-cadastrar-aluno,
-    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros {
+    .opt-alterar-banner, .opt-alterar-popup, .opt-listar-parceiros, .opt-cadastrar-categorias {
         width: 25%;
     }
 

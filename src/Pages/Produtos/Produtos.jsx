@@ -12,8 +12,10 @@ function Produtos() {
         payment_condition: "",
         hotmart_url: "",
         category: "",
-        sub_category: null,
-        photo: null,
+        sub_category: "",
+        photo: [], // Alterado para suportar array de fotos
+        detach: "0", // Novo campo para destacar o produto
+        detach_type: "produto", // Automaticamente definido como "produto" quando detach for "1"
     });
 
     const [categories, setCategories] = useState([]);
@@ -47,31 +49,70 @@ function Produtos() {
         fetchCategories();
     }, []);
 
+    const fetchSubcategories = async (categoryId) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                return;
+            }
+
+            const response = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/category?parent_id[]=${categoryId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data && response.data.categories && response.data.categories.length > 0) {
+                // Assume que haverá apenas um item no array de categorias retornadas
+                setSubCategories(response.data.categories[0].children);
+            } else {
+                setSubCategories([]);
+                console.error(`Resposta da API de subcategorias para categoria ${categoryId} inválida:`, response);
+            }
+        } catch (error) {
+            console.error(`Erro ao buscar subcategorias da categoria ${categoryId}:`, error);
+        }
+    };
+
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchAllProducts = async () => {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) {
                     return;
                 }
 
-                const response = await axios.get("https://centroeuropeuhomolog.belogic.com.br/api/product", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                let allProducts = [];
+                let page = 1;
 
-                if (response.data && response.data.products && response.data.products.data) {
-                    setProducts(response.data.products.data);
-                } else {
-                    console.error("Resposta da API de produtos inválida:", response);
+                // Loop para buscar todos os produtos de todas as páginas
+                while (true) {
+                    const response = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/product?page=${page}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (response.data && response.data.products && response.data.products.data) {
+                        allProducts = [...allProducts, ...response.data.products.data];
+                        // Verificar se há próxima página
+                        if (!response.data.products.next_page_url) {
+                            break;
+                        }
+                        page++;
+                    } else {
+                        console.error(`Resposta da API de produtos inválida para página ${page}:`, response);
+                        break;
+                    }
                 }
+
+                setProducts(allProducts);
             } catch (error) {
-                console.error("Erro ao buscar produtos:", error);
+                console.error("Erro ao buscar todos os produtos:", error);
             }
         };
 
-        fetchProducts();
+        fetchAllProducts();
     }, []);
 
     const handleChange = (e) => {
@@ -80,6 +121,19 @@ function Produtos() {
             ...formData,
             [name]: value,
         });
+
+        if (name === "category") {
+            fetchSubcategories(value);
+        }
+    };
+
+    const handlePhotoChange = (e) => {
+        // Converter o FileList para um array de Files
+        const filesArray = Array.from(e.target.files);
+        setFormData(prevState => ({
+            ...prevState,
+            photo: filesArray, // Atualiza o array de fotos
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -98,12 +152,23 @@ function Produtos() {
             payload.append("payment_condition", formData.payment_condition);
             payload.append("hotmart_url", formData.hotmart_url);
             payload.append("category", formData.category);
-            payload.append("photo", formData.photo);
+            payload.append("sub_category", formData.sub_category);
 
-            if (formData.sub_category !== null) {
-                payload.append("sub_category", formData.sub_category);
+            // Adicionando fotos
+            formData.photo.forEach((photo, index) => {
+                payload.append(`photo[${index}]`, photo); // Aqui, index é opcional
+            });
+
+            // Adicionar campo detach e detach_type baseado na seleção do usuário
+            if (formData.detach === "1") {
+                payload.append("detach", "1");
+                payload.append("detach_type", "produto"); // Sempre enviar "produto" se detach for "1"
+            } else {
+                payload.append("detach", "0");
+                payload.append("detach_type", ""); // Deixar vazio se detach for "0"
             }
 
+            // Enviar payload para a API
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/product", payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -120,8 +185,10 @@ function Produtos() {
                 payment_condition: "",
                 hotmart_url: "",
                 category: "",
-                sub_category: null,
-                photo: null,
+                sub_category: "",
+                photo: [], // Limpar as fotos após o envio
+                detach: "0", // Resetar para valor padrão
+                detach_type: "produto", // Definir novamente como "produto"
             });
 
             alert("Produto cadastrado com sucesso!");
@@ -129,6 +196,7 @@ function Produtos() {
             console.error("Erro ao cadastrar produto:", error);
 
             if (error.response) {
+                console.error("Erro detalhado:", error.response.data); // Exibe detalhes do erro na console
                 alert(`Erro ao cadastrar produto: ${error.response.data.message}`);
             } else {
                 alert("Ocorreu um erro ao cadastrar o produto. Por favor, tente novamente mais tarde.");
@@ -159,7 +227,7 @@ function Produtos() {
         <div>
             <Nav />
             <div className="produtos-main">
-            <h1>Lista de Produtos</h1>
+                <h1>Lista de Produtos</h1>
                 <table className="tabela-produtos">
                     <thead>
                         <tr>
@@ -189,22 +257,22 @@ function Produtos() {
 
                 <button onClick={handleDownloadExcel}>Baixar Excel</button>
 
-                <form className="form-produtos" onSubmit={handleSubmit}>
+                <form className="form-produtos" onSubmit={handleSubmit} encType="multipart/form-data">
                     <h2 className="form-h2">Adicione um novo produto:</h2>
                     <label>Categoria</label>
                     <select name="category" id="produtos" value={formData.category} onChange={handleChange} required>
                         <option value="">Selecione...</option>
                         {categories.map((cat) => (
-                            <option key={cat.id} value={cat.name}>
+                            <option key={cat.id} value={cat.id}>
                                 {cat.name}
                             </option>
                         ))}
                     </select>
                     <label>Subcategoria</label>
-                    <select name="sub_category" id="produtos-sub" value={formData.sub_category || ""} onChange={handleChange}>
+                    <select name="sub_category" id="produtos-sub" value={formData.sub_category} onChange={handleChange}>
                         <option value="">Selecione...</option>
-                        {subCategories && subCategories.map((subcat) => (
-                            <option key={subcat.id} value={subcat.name}>
+                        {subCategories.map((subcat) => (
+                            <option key={subcat.id} value={subcat.id}>
                                 {subcat.name}
                             </option>
                         ))}
@@ -212,17 +280,21 @@ function Produtos() {
                     <label>Nome</label>
                     <input name="name" id="nome" type="text" value={formData.name} onChange={handleChange} required />
                     <label>Descrição</label>
-                    <textarea name="description" id="descricao" value={formData.description} onChange={handleChange} required></textarea>
+                    <textarea name="description" id="descricao" value={formData.description} onChange={handleChange} required />
                     <label>Preço</label>
-                    <input name="price" id="preco" type="text" value={formData.price} onChange={handleChange} required />
-                    <label>Condição de pagamento</label>
-                    <input name="payment_condition" id="pagamento" type="text" value={formData.payment_condition} onChange={handleChange} required />
+                    <input name="price" id="preco" type="number" value={formData.price} onChange={handleChange} required />
+                    <label>Condição de Pagamento</label>
+                    <input name="payment_condition" id="payment" type="text" value={formData.payment_condition} onChange={handleChange} required />
                     <label>Link do produto</label>
-                    <input name="hotmart_url" id="link" type="text" value={formData.hotmart_url} onChange={handleChange} required />
-                    <label>Imagem</label>
-                    <input className="file" type="file" id="foto" name="foto" accept="image/png, image/jpeg" onChange={handleChange} required />
-                
-                    <button type="submit">Adicionar produto</button>
+                    <input name="hotmart_url" id="hotmart_url" type="text" value={formData.hotmart_url} onChange={handleChange} required />
+                    <label>Foto(s)</label>
+                    <input name="photo" id="photo" type="file" accept="image/*" multiple onChange={handlePhotoChange} required />
+                    <label>Destaque</label>
+                    <select name="detach" id="destaque" value={formData.detach} onChange={handleChange}>
+                        <option value="0">Não</option>
+                        <option value="1">Sim</option>
+                    </select>
+                    <button type="submit">Cadastrar</button>
                 </form>
             </div>
         </div>
