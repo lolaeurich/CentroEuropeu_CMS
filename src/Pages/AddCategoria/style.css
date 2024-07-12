@@ -29,18 +29,18 @@ html, body {
     height: 800px;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     padding: 10% 5%;
     background-color: #fff;
     overflow-x: auto; /* Adiciona barra de rolagem horizontal quando necessário */
     margin-top: 20%;
-    padding-inline: 5%;
+    padding-inline: 10%;
 }
 
 .form-addCategoria {
     width: 95%;
-    height: 320px;
+    height: 360px;
     border-radius: 0% 10% 10% 10%;
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
 
@@ -88,7 +88,6 @@ html, body {
     -webkit-backdrop-filter: blur( 4px );
     border-radius: 8px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
-    padding-left: 5px;
     font-size: 14px;
     cursor: pointer;
     color: #1250a1;
@@ -158,7 +157,7 @@ html, body {
     }
     
     .form-addCategoria button {
-        width: 55%;
+        width: 60%;
         margin-top: 10px;
         font-size: 18px;
     }
@@ -167,6 +166,7 @@ html, body {
 @media screen and (min-width: 1880px) {
     .addCategoria-main {
         column-gap: 0%;
+        justify-content: space-evenly;
     }
     .form-addCategoria {
         width: 35%;

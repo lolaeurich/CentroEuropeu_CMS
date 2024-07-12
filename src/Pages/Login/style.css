@@ -111,7 +111,8 @@ html, body {
 
 @media screen and (min-width: 1024px) {
     .login-container {
-        width: 60%;
+        width: 50%;
+        height: 80%;
     }
 
     .login-img {
@@ -142,7 +143,7 @@ html, body {
 
 @media screen and (min-width: 1300px) {
     .login-container {
-        width: 40%;
+        width: 35%;
         height: 75%;
     }
 
@@ -165,6 +166,7 @@ html, body {
         width: 40%;
         height: 40px;
         font-size: 16px;
+        padding-left: 5%;
     }
 }
 

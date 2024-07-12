@@ -132,7 +132,7 @@ function AddCategoria() {
                 <form className="form-addCategoria" onSubmit={handleSubmitExcluir}>
                     <h2 className="formAddCategoria-h2">Excluir categoria:</h2>
                     <label>Selecione a categoria que deseja excluir</label>
-                    <p>(essa ação excluirá também as subcategorias relacionadas)</p>
+                    <p>(para escluir uma categoria é preciso excluir suas subcategorias antes)</p>
                     <select
                         className="formAddCateg"
                         value={categoriaExcluir}
