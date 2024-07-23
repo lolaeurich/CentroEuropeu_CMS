@@ -12,10 +12,8 @@ function PopUp() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Recuperar o token do localStorage
         const token = localStorage.getItem("token");
 
-        // Verifica os valores antes do envio
         console.log("Name:", name);
         console.log("Discount:", discount);
         console.log("Description:", description);
@@ -40,7 +38,7 @@ function PopUp() {
             if (response.status === 200 && response.data && response.data.coupom) {
                 const { coupom } = response.data;
                 setMessage(`Cupom ${coupom.name} cadastrado com sucesso!`);
-                // Limpar os campos após o cadastro
+
                 setName("");
                 setDiscount("");
                 setDescription("");

@@ -33,7 +33,7 @@ html, body {
     align-items: center;
     padding: 10% 5%;
     background-color: #fff;
-    overflow-x: auto; /* Adiciona barra de rolagem horizontal quando necessário */
+    overflow-x: auto; 
     margin-top: 20%;
     padding-inline: 10%;
 }

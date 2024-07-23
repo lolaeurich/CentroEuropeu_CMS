@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 import axios from "axios";
-import * as XLSX from "xlsx"; // Importar a biblioteca para manipulação de Excel
+import * as XLSX from "xlsx"; 
 
 function Servicos() {
     const [formData, setFormData] = useState({
@@ -13,9 +13,9 @@ function Servicos() {
         hotmart_url: "",
         category: "",
         sub_category: "",
-        photo: [], // Alterado para armazenar array de arquivos
-        detach: "0", // Novo campo para destacar o serviço
-        detach_type: "servico", // Definido automaticamente como "serviços" se detach for true
+        photo: [], 
+        detach: "0", 
+        detach_type: "servico", 
     });
 
     const [categories, setCategories] = useState([]);
@@ -64,7 +64,6 @@ function Servicos() {
             });
 
             if (response.data && response.data.categories && response.data.categories.length > 0) {
-                // Assume que haverá apenas um item no array de categorias retornadas
                 setSubCategories(response.data.categories[0].children);
             } else {
                 setSubCategories([]);
@@ -86,7 +85,6 @@ function Servicos() {
                 let allServices = [];
                 let page = 1;
 
-                // Loop para buscar todos os serviços de todas as páginas
                 while (true) {
                     const response = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/service?page=${page}`, {
                         headers: {
@@ -96,7 +94,6 @@ function Servicos() {
 
                     if (response.data && response.data.services && response.data.services.data) {
                         allServices = [...allServices, ...response.data.services.data];
-                        // Verificar se há próxima página
                         if (!response.data.services.next_page_url) {
                             break;
                         }
@@ -129,12 +126,11 @@ function Servicos() {
     };
 
     const handlePhotoChange = (e) => {
-        // Converter o FileList para um array de Files
         const filesArray = Array.from(e.target.files);
-        setSelectedFiles(filesArray); // Atualiza os arquivos selecionados
+        setSelectedFiles(filesArray); 
         setFormData(prevState => ({
             ...prevState,
-            photo: [...prevState.photo, ...filesArray], // Adiciona novas fotos ao array existente
+            photo: [...prevState.photo, ...filesArray], 
         }));
     };
 
@@ -156,21 +152,18 @@ function Servicos() {
             payload.append("category", formData.category);
             payload.append("sub_category", formData.sub_category);
     
-            // Adicionando fotos
             formData.photo.forEach((photo, index) => {
-                payload.append(`photo[${index}]`, photo); // Aqui, index é opcional
+                payload.append(`photo[${index}]`, photo); 
             });
     
-            // Adicionar campo detach e detach_type baseado na seleção do usuário
             if (formData.detach) {
                 payload.append("detach", "1");
-                payload.append("detach_type", "serviços"); // Sempre enviar "serviços" se detach for true
+                payload.append("detach_type", "serviços"); 
             } else {
                 payload.append("detach", "0");
-                payload.append("detach_type", ""); // Deixar vazio se detach for false
+                payload.append("detach_type", "");
             }
     
-            // Enviar payload para a API
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/service", payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -188,9 +181,9 @@ function Servicos() {
                 hotmart_url: "",
                 category: "",
                 sub_category: "",
-                photo: [], // Limpar as fotos após o envio
-                detach: 0, // Resetar para valor padrão
-                detach_type: "servico", // Resetar para valor padrão
+                photo: [], 
+                detach: 0, 
+                detach_type: "servico", 
             });
     
             alert("Serviço cadastrado com sucesso!");
@@ -198,9 +191,8 @@ function Servicos() {
             console.error("Erro ao cadastrar serviço:", error);
     
             if (error.response) {
-                console.error("Erro detalhado:", error.response.data); // Exibir detalhes do erro na console
+                console.error("Erro detalhado:", error.response.data); 
     
-                // Construir mensagem de erro mais informativa
                 let errorMessage = "Erro ao cadastrar serviço.";
                 if (error.response.data && error.response.data.errors) {
                     errorMessage += "\nDetalhes do erro:";

@@ -22,7 +22,7 @@ function AreaLogada() {
                 const token = localStorage.getItem("token");
 
                 if (!token) {
-                    navigate("/"); // Redirecionar para página de login se não houver token
+                    navigate("/"); 
                     return;
                 }
 
@@ -32,11 +32,11 @@ function AreaLogada() {
                     }
                 });
 
-                const { name } = response.data; // Alterado para pegar o 'name' diretamente da resposta
+                const { name } = response.data; 
                 setUserName(name);
             } catch (error) {
                 console.error("Erro ao buscar dados do usuário:", error);
-                // Tratar erro (ex: redirecionar para página de login)
+          
             }
         };
 

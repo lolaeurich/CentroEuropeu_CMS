@@ -23,7 +23,7 @@ function Banner() {
             const formData = new FormData();
             formData.append("bannerImg", selectedFile);
 
-            const token = localStorage.getItem("token"); // Obter token de autenticação do localStorage
+            const token = localStorage.getItem("token"); 
 
             if (!token) {
                 throw new Error("Token de autenticação não encontrado.");

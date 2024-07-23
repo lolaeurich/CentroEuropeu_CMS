@@ -45,12 +45,12 @@ function AddCategoria() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            // Após adicionar, atualizar a lista de categorias
+      
             fetchCategorias();
-            setNomeCategoria(""); // Limpar o campo de input
-            setIsDestaque(false); // Resetar seleção de destaque
-            setDetachType(""); // Resetar tipo de destaque
-            setShowDetachType(false); // Esconder opções de tipo de destaque
+            setNomeCategoria("");
+            setIsDestaque(false); 
+            setDetachType("");
+            setShowDetachType(false); 
             alert("Categoria adicionada com sucesso!");
         } catch (error) {
             console.error("Erro ao adicionar categoria:", error);
@@ -67,9 +67,9 @@ function AddCategoria() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            // Após excluir, atualizar a lista de categorias
-            await fetchCategorias(); // Aguardar a atualização das categorias
-            setCategoriaExcluir(""); // Limpar o campo de seleção
+        
+            await fetchCategorias(); 
+            setCategoriaExcluir(""); 
             alert("Categoria excluída com sucesso!");
         } catch (error) {
             console.error("Erro ao excluir categoria:", error);

@@ -12,11 +12,9 @@ function Nav() {
     };
 
     const handleLogout = () => {
-        // Limpar o token de autenticação (se estiver usando localStorage)
         localStorage.removeItem("token");
 
-        // Redirecionar para a página de login (ou outra página após o logout)
-        navigate("/"); // Substitua "/login" pelo caminho da sua página de login
+        navigate("/"); 
     };
 
     return (

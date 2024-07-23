@@ -32,8 +32,8 @@ html, body {
 /*MAIN*/
 
 .login-main {
-    width: 100vw; /* Largura de 100% da viewport */
-    height: 95vh; /* Altura de 100% da viewport */
+    width: 100vw; 
+    height: 95vh; 
     background-image: url("../../Assets/CE_banner.png");
     background-position: center;
     background-repeat: no-repeat;

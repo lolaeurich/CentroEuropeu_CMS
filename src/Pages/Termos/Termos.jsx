@@ -51,7 +51,7 @@ function Termos() {
         {
           name: nameToUpdate,
           description: descriptionToUpdate,
-          _method: "PUT", // Método _method para indicar PUT
+          _method: "PUT", 
         },
         {
           headers: {
@@ -64,7 +64,7 @@ function Termos() {
 
       alert(`Termo atualizado com sucesso: ${response.data.term.name}`);
 
-      // Atualiza a lista de termos após a atualização
+
       fetchTerms();
     } catch (error) {
       console.error("Erro ao atualizar termo:", error);
@@ -87,7 +87,6 @@ function Termos() {
         <form className="form-termos">
           <h2>Alterar termos do site:</h2>
 
-          {/* Alterar LGPD */}
           <label>Alterar LGPD:</label>
           <textarea
             name="lgpdDescription"
@@ -103,7 +102,6 @@ function Termos() {
             Salvar LGPD
           </button>
 
-          {/* Alterar Políticas de Privacidade */}
           <label>Alterar Políticas de Privacidade:</label>
           <textarea
             name="privacyPolicyDescription"
@@ -121,7 +119,6 @@ function Termos() {
             Salvar Políticas de Privacidade
           </button>
 
-          {/* Alterar Termos de Uso */}
           <label>Alterar Termos de Uso:</label>
           <textarea
             name="termsOfUseDescription"

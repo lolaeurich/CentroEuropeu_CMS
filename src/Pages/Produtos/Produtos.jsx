@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 import axios from "axios";
-import * as XLSX from "xlsx"; // Importar a biblioteca para manipulação de Excel
+import * as XLSX from "xlsx"; 
 
 function Produtos() {
     const [formData, setFormData] = useState({
@@ -13,9 +13,9 @@ function Produtos() {
         hotmart_url: "",
         category: "",
         sub_category: "",
-        photo: [], // Alterado para suportar array de fotos
-        detach: "0", // Novo campo para destacar o produto
-        detach_type: "produto", // Automaticamente definido como "produto" quando detach for "1"
+        photo: [], 
+        detach: "0", 
+        detach_type: "produto", 
     });
 
     const [categories, setCategories] = useState([]);
@@ -63,7 +63,6 @@ function Produtos() {
             });
 
             if (response.data && response.data.categories && response.data.categories.length > 0) {
-                // Assume que haverá apenas um item no array de categorias retornadas
                 setSubCategories(response.data.categories[0].children);
             } else {
                 setSubCategories([]);
@@ -85,7 +84,6 @@ function Produtos() {
                 let allProducts = [];
                 let page = 1;
 
-                // Loop para buscar todos os produtos de todas as páginas
                 while (true) {
                     const response = await axios.get(`https://centroeuropeuhomolog.belogic.com.br/api/product?page=${page}`, {
                         headers: {
@@ -95,7 +93,6 @@ function Produtos() {
 
                     if (response.data && response.data.products && response.data.products.data) {
                         allProducts = [...allProducts, ...response.data.products.data];
-                        // Verificar se há próxima página
                         if (!response.data.products.next_page_url) {
                             break;
                         }
@@ -128,11 +125,10 @@ function Produtos() {
     };
 
     const handlePhotoChange = (e) => {
-        // Converter o FileList para um array de Files
         const filesArray = Array.from(e.target.files);
         setFormData(prevState => ({
             ...prevState,
-            photo: filesArray, // Atualiza o array de fotos
+            photo: filesArray, 
         }));
     };
 
@@ -156,19 +152,18 @@ function Produtos() {
 
             // Adicionando fotos
             formData.photo.forEach((photo, index) => {
-                payload.append(`photo[${index}]`, photo); // Aqui, index é opcional
+                payload.append(`photo[${index}]`, photo); 
             });
 
-            // Adicionar campo detach e detach_type baseado na seleção do usuário
+
             if (formData.detach === "1") {
                 payload.append("detach", "1");
-                payload.append("detach_type", "produto"); // Sempre enviar "produto" se detach for "1"
+                payload.append("detach_type", "produto"); 
             } else {
                 payload.append("detach", "0");
-                payload.append("detach_type", ""); // Deixar vazio se detach for "0"
+                payload.append("detach_type", "");
             }
 
-            // Enviar payload para a API
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/product", payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -186,9 +181,9 @@ function Produtos() {
                 hotmart_url: "",
                 category: "",
                 sub_category: "",
-                photo: [], // Limpar as fotos após o envio
-                detach: "0", // Resetar para valor padrão
-                detach_type: "produto", // Definir novamente como "produto"
+                photo: [], 
+                detach: "0",
+                detach_type: "produto", 
             });
 
             alert("Produto cadastrado com sucesso!");
@@ -196,7 +191,7 @@ function Produtos() {
             console.error("Erro ao cadastrar produto:", error);
 
             if (error.response) {
-                console.error("Erro detalhado:", error.response.data); // Exibe detalhes do erro na console
+                console.error("Erro detalhado:", error.response.data); 
                 alert(`Erro ao cadastrar produto: ${error.response.data.message}`);
             } else {
                 alert("Ocorreu um erro ao cadastrar o produto. Por favor, tente novamente mais tarde.");

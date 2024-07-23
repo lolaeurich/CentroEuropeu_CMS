@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import * as XLSX from "xlsx"; // Importando a biblioteca XLSX
+import * as XLSX from "xlsx"; 
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 
@@ -16,7 +16,6 @@ function Alunos() {
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token de autenticação não encontrado.");
-      // Lógica para tratar o erro de autenticação aqui
       return;
     }
 
@@ -35,7 +34,6 @@ function Alunos() {
         setAlunos(response.data.students.data);
       } catch (error) {
         console.error("Erro ao buscar alunos:", error.message);
-        // Lógica para tratar o erro de requisição aqui
       }
     };
 
@@ -50,7 +48,6 @@ function Alunos() {
 
       if (!token) {
         console.error("Token de autenticação não encontrado.");
-        // Tratar o erro, redirecionar para a página de login, etc.
         return;
       }
 
@@ -71,25 +68,22 @@ function Alunos() {
       console.log("Aluno cadastrado com sucesso:", response.data);
       setMessage("Aluno cadastrado com sucesso!");
 
-      // Limpar campos após o cadastro
       setNome("");
       setCpf("");
       setCurso("");
 
-      // Limpar mensagem após 5 segundos
       setTimeout(() => {
         setMessage("");
-      }, 5000); // 5000 milissegundos = 5 segundos
+      }, 5000); 
     } catch (error) {
       console.error("Erro ao cadastrar aluno:", error);
       setMessage(
         "Erro ao cadastrar aluno. Por favor, tente novamente."
       );
 
-      // Limpar mensagem de erro após 5 segundos
       setTimeout(() => {
         setMessage("");
-      }, 5000); // 5000 milissegundos = 5 segundos
+      }, 5000); 
     }
   };
 
@@ -99,7 +93,6 @@ function Alunos() {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        // Lidar com o caso em que não há token (usuário não autenticado)
         return;
       }
 
@@ -120,13 +113,13 @@ function Alunos() {
       console.log("Resposta da importação de alunos:", response.data);
       setMessage("Importação realizada com sucesso!");
 
-      // Limpar campo de arquivo após a importação
+
       setFile(null);
 
-      // Limpar mensagem após 5 segundos
+
       setTimeout(() => {
         setMessage("");
-      }, 5000); // 5000 milissegundos = 5 segundos
+      }, 5000); 
     } catch (error) {
       if (error.response) {
         console.error("Erro ao importar alunos:", error.response.data.message);
@@ -138,10 +131,9 @@ function Alunos() {
         );
       }
 
-      // Limpar mensagem de erro após 5 segundos
       setTimeout(() => {
         setMessage("");
-      }, 5000); // 5000 milissegundos = 5 segundos
+      }, 5000); 
     }
   };
 

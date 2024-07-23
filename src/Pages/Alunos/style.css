@@ -44,8 +44,8 @@ html, body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     overflow-x: auto;
-    overflow-y: auto; /* Adicionando scroll vertical */
-    max-height: 400px; /* Altura máxima antes de exibir scroll */
+    overflow-y: auto; 
+    max-height: 400px; 
 }
 
 .tabela-alunos th,
@@ -66,14 +66,14 @@ html, body {
 
 .forms {
     display: flex;
-    flex-wrap: wrap; /* Garante que os formulários quebrem para a próxima linha */
-    justify-content: center; /* Centraliza os formulários */
-    gap: 30px; /* Espaçamento entre os formulários */
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 30px; 
 }
 
 .form-alunos {
     width: 100%;
-    max-width: 400px; /* Largura máxima dos formulários */
+    max-width: 400px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -141,7 +141,7 @@ html, body {
     }
 
     .forms {
-        justify-content: flex-start; /* Ajustado para alinhar à esquerda */
+        justify-content: flex-start;
     }
     
     .form-alunos {

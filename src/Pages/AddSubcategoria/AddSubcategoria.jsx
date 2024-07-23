@@ -61,9 +61,9 @@ function AddSubCategoria() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            // Após adicionar, limpar os campos e atualizar a lista de subcategorias
+      
             setNomeSubcategoria("");
-            fetchSubcategorias(categoriaSelecionada); // Atualiza a lista de subcategorias
+            fetchSubcategorias(categoriaSelecionada);
             alert("Subcategoria adicionada com sucesso!");
         } catch (error) {
             console.error("Erro ao adicionar subcategoria:", error);
@@ -80,9 +80,9 @@ function AddSubCategoria() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            // Após excluir, limpar os campos e atualizar a lista de subcategorias
+      
             setSubcategoriaSelecionada("");
-            fetchSubcategorias(categoriaSelecionada); // Atualiza a lista de subcategorias
+            fetchSubcategorias(categoriaSelecionada); 
             alert("Subcategoria excluída com sucesso!");
         } catch (error) {
             console.error("Erro ao excluir subcategoria:", error);

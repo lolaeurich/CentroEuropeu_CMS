@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
-import * as XLSX from 'xlsx'; // Importar a biblioteca XLSX
+import * as XLSX from 'xlsx'; 
 
 function Parceiros() {
   const [parceiros, setParceiros] = useState([]);
@@ -20,7 +20,6 @@ function Parceiros() {
         setParceiros(response.data.partners.data);
       } catch (error) {
         console.error('Erro ao buscar parceiros:', error.message);
-        // Tratar o erro de autorização aqui
       }
     };
 
@@ -28,14 +27,12 @@ function Parceiros() {
       fetchParceiros();
     } else {
       console.error('Token JWT não encontrado.');
-      // Lógica para redirecionar para a página de login ou tratar o erro de autenticação
     }
   }, []);
 
   const handleDownloadExcel = () => {
     const filename = "lista_parceiros.xlsx";
 
-    // Preparar dados para exportação
     const dataExport = parceiros.map(parceiro => ({
       Nome: parceiro.name,
       Email: parceiro.email,
@@ -45,14 +42,11 @@ function Parceiros() {
       "Área de Ocupação": parceiro.occupation_area
     }));
 
-    // Criar workbook e worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(dataExport);
 
-    // Adicionar worksheet ao workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, "Parceiros");
 
-    // Salvar arquivo
     XLSX.writeFile(workbook, filename);
   };
 

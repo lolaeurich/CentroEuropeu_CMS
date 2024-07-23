@@ -10,7 +10,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const handleLogin = async (event) => {
-        event.preventDefault(); // Evita o recarregamento da página
+        event.preventDefault(); 
 
         try {
             const response = await axios.post("https://centroeuropeuhomolog.belogic.com.br/api/auth/login", {
@@ -21,11 +21,9 @@ function Login() {
             const { token } = response.data;
             localStorage.setItem("token", token);
 
-            // Redirecionar para a página de Área Logada após o login
             navigate("/AreaLogada");
         } catch (error) {
             console.error("Erro ao fazer login:", error);
-            // Tratar erro (ex: exibir mensagem para usuário)
         }
     };
 

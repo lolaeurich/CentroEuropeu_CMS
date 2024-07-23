@@ -28,7 +28,7 @@ html, body {
     position: relative;
     top: 0;
     width: 100%;
-    height: 250px; /* Ajuste conforme necessário */
+    height: 250px; 
     background-image: url("../../Assets//bg.jpg");
     background-position: center;
     background-size: cover;
@@ -49,8 +49,8 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(1, 1, 107, 0.5); /* Cor azul com opacidade */
-    z-index: 1; /* Certifica-se que o overlay esteja acima da imagem */
+    background-color: rgba(1, 1, 107, 0.5); 
+    z-index: 1; 
 }
 
 .logada-welcome {
@@ -106,8 +106,8 @@ html, body {
 .opt-cadastrar-prod:hover, .opt-cadastrar-serv:hover, .opt-cadastrar-aluno:hover,
 .opt-alterar-banner:hover, .opt-alterar-popup:hover, .opt-listar-parceiros:hover,
 .opt-cadastrar-categorias:hover {
-    transform: scale(1.05); /* Ajuste o valor conforme desejado */
-    transition: transform 0.3s ease; /* Transição suave de 0.3 segundos */
+    transform: scale(1.05); 
+    transition: transform 0.3s ease; 
 }
 
 .icon {
