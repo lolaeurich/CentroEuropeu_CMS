@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import * as XLSX from "xlsx"; 
+import * as XLSX from "xlsx"; // Importando a biblioteca XLSX
+import { FaTrash } from 'react-icons/fa'; // Importando o ícone de lixeira
 import "./style.css";
 import Nav from "../../Components/Nav/Nav";
 
@@ -67,23 +68,18 @@ function Alunos() {
 
       console.log("Aluno cadastrado com sucesso:", response.data);
       setMessage("Aluno cadastrado com sucesso!");
-
       setNome("");
       setCpf("");
       setCurso("");
-
       setTimeout(() => {
         setMessage("");
-      }, 5000); 
+      }, 1000);
     } catch (error) {
       console.error("Erro ao cadastrar aluno:", error);
-      setMessage(
-        "Erro ao cadastrar aluno. Por favor, tente novamente."
-      );
-
+      setMessage("Erro ao cadastrar aluno. Por favor, tente novamente.");
       setTimeout(() => {
         setMessage("");
-      }, 5000); 
+      }, 1000);
     }
   };
 
@@ -112,28 +108,21 @@ function Alunos() {
 
       console.log("Resposta da importação de alunos:", response.data);
       setMessage("Importação realizada com sucesso!");
-
-
       setFile(null);
-
-
       setTimeout(() => {
         setMessage("");
-      }, 5000); 
+      }, 1000);
     } catch (error) {
       if (error.response) {
         console.error("Erro ao importar alunos:", error.response.data.message);
         setMessage(`Erro ao importar alunos: ${error.response.data.message}`);
       } else {
         console.error("Erro ao importar alunos:", error.message);
-        setMessage(
-          "Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde."
-        );
+        setMessage("Ocorreu um erro ao importar alunos. Por favor, tente novamente mais tarde.");
       }
-
       setTimeout(() => {
         setMessage("");
-      }, 5000); 
+      }, 1000);
     }
   };
 
@@ -161,6 +150,42 @@ function Alunos() {
     link.click();
   };
 
+  const handleDelete = async (id) => {
+    // Confirmar exclusão
+    const confirmDelete = window.confirm("Você tem certeza que deseja excluir este aluno?");
+    if (!confirmDelete) return; // Se o usuário cancelar, não fazer nada
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token de autenticação não encontrado.");
+        return;
+      }
+
+      await axios.delete(
+        `https://centroeuropeuhomolog.belogic.com.br/api/student/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Atualizar a lista de alunos após a exclusão
+      setAlunos(alunos.filter((aluno) => aluno.id !== id));
+      setMessage("Aluno excluído com sucesso!");
+      setTimeout(() => {
+        setMessage("");
+      }, 1000);
+    } catch (error) {
+      console.error("Erro ao excluir aluno:", error.message);
+      setMessage("Erro ao excluir aluno. Por favor, tente novamente.");
+      setTimeout(() => {
+        setMessage("");
+      }, 1000);
+    }
+  };
+
   return (
     <div>
       <Nav />
@@ -172,6 +197,7 @@ function Alunos() {
               <th>Nome</th>
               <th>CPF</th>
               <th>Curso</th>
+              <th>Ações</th> {/* Coluna para as ações */}
             </tr>
           </thead>
           <tbody>
@@ -181,11 +207,19 @@ function Alunos() {
                   <td>{aluno.name}</td>
                   <td>{aluno.cpf}</td>
                   <td>{aluno.course || "-"}</td>
+                  <td>
+                    <button
+                      onClick={() => handleDelete(aluno.id)}
+                      className="delete-button"
+                    >
+                      <FaTrash /> {/* Ícone de lixeira */}
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="3">Nenhum aluno encontrado.</td>
+                <td colSpan="4">Nenhum aluno encontrado.</td>
               </tr>
             )}
           </tbody>
